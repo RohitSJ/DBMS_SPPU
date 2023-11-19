@@ -1,0 +1,23 @@
+CREATE OR REPLACE FUNCTION Age_calc(dat IN date,d OUT number,m OUT number) RETURN number AS y number;
+BEGIN 
+d:=sysdate-dat;
+y:=d/365;
+y:=trunc(y);
+m:=(d-y*365)/30;
+M:=trunc(m);
+d:=trunc(d-y*365-m*30);
+RETURN y;
+END;
+/
+
+set serveroutput on;
+
+DECLARE D varchar2(20):='r';
+P1 NUMBER:=&day_of_birth;
+P2 NUMBER:=&month_of_birth;
+P3 NUMBER:=&year_of_birth;
+BEGIN D:=to_char(p1)||'-'||to_char(p2)||'-'||to_char(p3);
+P1:=AGE_CALC(to_date(d,'dd-mm-yyyy'),P2,P3);
+DBMS_OUTPUT.PUT_LINE('DAYS: '||P2||' MONTHS: '||P3||' YEARS: '||P1);
+END;
+/

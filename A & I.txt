@@ -1,0 +1,64 @@
+A & I
+
+12.
+1. Using aggregation Return Designation with Total Salary is Above 200000.
+
+db.Empdb.aggregate({$group:{_id:"$Designation",totalsal:{$sum:"#Salary"}}},{$match:{totalsal:{$lte:50000}}})
+
+2. Using Aggregate method returns names and _id in upper case and in alphabetical order.
+
+db.Empdb.aggregate([{$project :{Name:{$toUpper:"$Name"},_id:1 }},{ $sort : {Name :1}}]) 
+
+3. Using aggregation method find Employee with Total Salary for Each City with Designation="DBA".
+
+db.Empdb.aggregate([{$match:{Designation:"DBA"}},{$group:{_id:"$Add",totalSal:{$sum:"$Salary"}}}]) 
+
+4. Create Single Field Indexes on Designation field of employee collection
+
+db.Empdb.ensureIndex({"Designation":1})
+db.Empdb.find({Designation:"Programmer"}).explain("executionStats")
+
+5. To Create Multikey Indexes on Expertise field of employee collection.
+
+db.emp.ensureIndex({"Expertise. Mysql": 1}) 
+
+6. Create an Index on Emp_id field, compare the time require to search Emp_id before and after creating an index. (Hint Add at least 10000 Documents)
+db.Empdb.ensureIndex({"Empid":1})
+
+for (i=0; i<10000; i++) {db.user.insert({ "Empid": i, "username" : "user" +i, "age" : Math.floor(Math.random()*120), "created" : new Date() } ); } 
+
+
+7. Return a List of Indexes on created on employee Collection.
+
+db.Empdb.getIndexes()
+
+
+
+
+13.
+1. Using aggregation Return separates value in the Expertise array and return sum of each element of array.
+
+db.Empdb.aggregate([ {$unwind:"$Expertise"}, {$group:{_id:"$Expertise" ,number:{$sum:1}}}])
+
+2. Using Aggregate method return Max and Min Salary for each company.
+
+db.Empdb.aggregate([{$group:{_id:"$Company",min:{$min:"$Salary"},max:{$max:"$Salary"}}}]) 
+
+3. Using Aggregate method find Employee with Total Salary for Each City with Designation="DBA". 
+
+db.Empdb.aggregate([{$match:{Designation:"DBA"}},{$group:{_id:"$Add",totalSal:{$sum:"$Salary"}}}]) 
+
+4. Using aggregation method Return separates value in the Expertise array for employee name where Swapnil Jadhav
+
+db.Empdb.aggregate([{$unwind:"$Expertise"},{$match:{"Name.FName":"Robert","Name.Lname":"Clark"}}])
+
+5. To Create Compound Indexes on Name: 1, Age: -1
+
+db.Empdb.ensureIndex({"Name":1,"Age":-1})
+
+6. Create an Index on Emp_id field , compare the time require to search Emp_id before and after creating an index. (Hint Add at least 10000 Documents)
+
+for (i=0; i<10000; i++) {db.user.insert({ "Emp_id": i, "username" : "user" +i, "age" : Math.floor(Math.random()*120), "created" : new Date() } ); } 
+
+7. Return a List of Indexes on created on employee Collection.
+db.Empdb.getIndexes()

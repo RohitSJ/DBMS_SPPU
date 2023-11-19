@@ -1,0 +1,32 @@
+create table ORoll(ID Number,Name varchar(20));
+create table NRoll(ID Number,Name varchar(20));
+
+SQL> insert into ORoll values(1,'A');
+SQL> insert into ORoll values(2,'B');
+
+SQL> insert into NRoll values(3,'C');
+SQL> insert into NRoll values(4,'D');
+
+DECLARE
+rollno number;
+flag int(2);
+cursor c_roll(rollno number) is select * from ORoll where id not in(select id from NRoll where NRoll.id=ORoll.id);
+info NRoll%rowtype;
+BEGIN
+rollno :=&rollno;
+flag :=0;
+open c_roll(rollno);
+loop fetch c_roll into info;
+exit when c_roll%notfound;
+if (info.id=rollno) then insert into NRoll values(info.id,info.Name);
+flag :=1;
+end if;
+end loop;
+if (c_roll%rowcount=0 or flag=0) then
+dbms_output.put_line('Already exists');
+else
+dbms_output.put_line('Record updated in new table');
+end if;
+close c_roll;
+END;
+/

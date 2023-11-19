@@ -1,0 +1,38 @@
+create table borrow(rollno int,name varchar(10),dateofissue date,nameofbook varchar(10),status varchar(10));
+create table fine(rollno int,fdate date,amt int);
+
+insert into borrow values(10,'Raj',to_date('20230831','YYYYMMDD'),'IoT','I');
+
+DECLARE
+p_nameofbook varchar(50);
+p_rollno number(3);
+p_dateofissue date;
+currentdate date;
+noofdays number(30);
+amount number;
+nodata EXCEPTION;
+
+BEGIN
+p_rollno:=&rollno;
+p_nameofbook :='&nameofbook';
+currentdate:=trunc(SYSDATE);
+IF p_rollno<=0 THEN
+RAISE nodata;
+END IF;
+
+SELECT dateofissue into p_dateofissue FROM borrow WHERE rollno=p_rollno AND nameofbook=p_nameofbook;
+SELECT trunc(SYSDATE)- p_dateofissue INTO noofdays from dual;
+dbms_output.put_line('No of Days:'||noofdays);
+
+IF (noofdays>30) THEN amount:=noofdays*50;
+ELSIF (noofdays>=15 AND noofdays <=30) THEN amount:= noofdays*5;
+END IF;
+IF amount>0 THEN insert into fine values(p_rollno,sysdate,amount);
+END IF;
+UPDATE borrow SET Status='R' WHERE rollno=p_rollno;
+
+EXCEPTION
+WHEN nodata THEN
+dbms_output.put_line('Not found...');
+END;
+/

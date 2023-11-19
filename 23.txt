@@ -1,0 +1,30 @@
+SET SERVEROUTPUT ON;
+SET VERIFY OF;
+
+create table customerss(cust_id varchar(20) PRIMARY KEY,
+cust_name varchar(20),
+salary NUMBER);
+
+insert into customerss values('c101','onkar',50000);
+insert into customerss values('c102','kaushal',10000);
+insert into customerss values('c103','jayesh',120000);
+insert into customerss values('c104','ritesg',10000);
+
+
+
+CREATE OR REPLACE TRIGGER cust_tig
+AFTER INSERT OR DELETE OR UPDATE
+ON customerss
+FOR EACH ROW
+DECLARE
+    salary_diff NUMBER;
+BEGIN
+    IF INSERTING OR UPDATING THEN
+        salary_diff := :NEW.salary - NVL(:OLD.salary, 0);
+        dbms_output.put_line('Salary Difference (New - Old): ' || salary_diff);
+    ELSIF DELETING THEN
+        dbms_output.put_line('Salary Before Deletion: ' || :OLD.salary);
+    END IF;
+END;
+/
+

@@ -1,0 +1,87 @@
+10.
+
+1. Select all documents where the Designation field has the value "Programmer" and the value of the salary field is greater than 
+30000.
+
+db.Empdb.find({Designation:"Programmer",Salary:{$gt:30000}})
+
+2. Creates a new document if no document in the employee collection contains
+ {Designation: "Tester", Company_name: "TCS", Age: 25}
+
+db.Empdb.update({Designation: "Tester", Company_name: "TCS"},{$set:{Age:25}},{upsert:true})
+
+3. Increase salary of each Employee working with “Infosys" 10000.
+
+db.Empdb.update({Company:"Infosys"},{$inc:{Salary:10000}},{multi:true})
+
+4. Finds all employees working with "TCS" and reduce their salary by 5000.
+
+db.Empdb.update({Company:"TCS"},{$inc:{Salary:-5000}},{multi:true})
+
+5. Return documents where Designation is not equal to "Tester".
+
+db.Empdb.find({Designation:{$ne:"Tester"}})
+
+6. Find all employee with Exact Match on an Array having Expertise: ['Mongodb','Mysql','Cassandra']
+
+db.Empdb.find({Expertise:["Mysql","Mongodb","Cassandra"]})
+
+
+
+
+11.
+
+1. Find name of Employee where age is less than 30 and salary more than 50000.
+
+db.Empdb.find({$and:[{Age:{$lt:30}},{Salary:{$gt:50000}}]})
+
+2. Creates a new document if no document in the employee collection contains
+ {Designation: "Tester", Company_name: "TCS", Age: 25}
+
+db.Empdb.update({Designation: "Tester", Company_name: "TCS"},{$set:{Age:25}},{upsert:true})
+
+3. Selects all documents in the collection where the field age has a value less than 30 or the value of the salary field is greater than 40000.
+
+db.Empdb.find({$and:[{Age:{$lt:30}},{Salary:{$gt:40000}}]},{Name:1,Empid:1})
+
+4. Find documents where Designation is not equal to "Developer".
+
+db.Empdb.find({Designation:{$ne:"Developer"}})
+
+5. Find _id, Designation, Address and Name from all documents where Company_name is "Infosys".
+
+db.Empdb.find({},{_id:1,Designation:1,Add:1,Name:1},{Company:"Infosys"})
+
+6. Display only FName and LName of all Employees.
+
+db.Empdb.find({},{"Name.FName":1,"Name.Lname":1,_id:0})
+
+
+
+11.B
+
+1. Creates a new document if no document in the employee collection contains
+{Designation: "Tester", Company_name: "TCS", Age: 25}
+
+db.Empdb.update({Designation: "Tester", Company_name: "TCS"},{$set:{Age:25}},{upsert:true})
+
+2. Finds all employees working with Company_name: "TCS" and increase their salary by 2000.
+
+db.Empdb.update({Company:"TCS"},{$inc:{Salary:2000}},{multi:true})
+ 
+3. Matches all documents where the value of the field Address is an embedded document that contains only the field city with the value "Pune" and the field Pin_code with the value "411001".
+
+db.Empdb.find({$and:[{"Add.PAdd.City":"Pune"},{"Add.PAdd.Pin":411001}]})
+
+4. Find employee details who are working as "Developer" or "Tester".
+
+db.Empdb.find({Designation:{$in:["Developer","Tester"]}})
+
+5. Drop Single documents where designation="Developer".
+
+db.Empdb.remove( {Designation:"Developer"},1)
+
+6. Count number of documents in employee collection.
+
+db.Empdb.count()
+

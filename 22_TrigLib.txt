@@ -1,0 +1,60 @@
+SET SERVEROUTPUT ON;
+SET VERIFY OF;
+
+create table flibrary(rollno INT,
+ name varchar(20),
+ dateofissue date,
+ nameofbook varchar(20),
+ status varchar(20)
+ );
+
+create table flibrary_audit(
+    rollno INT,
+    name varchar(20),
+    dateofissue date,
+    nameofbook varchar(20),
+    status varchar(20),
+    ts timestamp
+);
+
+insert into flibrary values(1,'onkar',to_date('2023-11-10','YYYY_MM_DD'),'dbms','i');
+insert into flibrary values(2,'kaushal',to_date('2023-10-10','YYYY_MM_DD'),'toc','i');
+insert into flibrary values(3,'aditya',to_date('2023-10-25','YYYY_MM_DD'),'spm','i');
+
+..................before trigger.............
+
+CREATE OR REPLACE TRIGGER before_delt_update
+BEFORE DELETE OR UPDATE ON flibrary
+FOR EACH ROW
+BEGIN
+IF UPDATING THEN
+    insert into flibrary_audit values(:OLD.rollno,:OLD.name,
+    :OLD.dateofissue,:OLD.nameofbook,:OLD.status,
+    current_timestamp,'UPDATE'
+    );
+ELSIF DELETING THEN
+    insert into flibrary_audit values(:OLD.rollno,:OLD.name,
+    :OLD.dateofissue,:OLD.nameofbook,:OLD.status,
+    current_timestamp,'DELETE'
+    );
+END IF;
+END;
+
+
+.....................after tigger..............
+CREATE OR REPLACE TRIGGER before_delt_update
+AFTER INSERT OR DELETE OR UPDATE ON flibrary
+FOR EACH ROW
+BEGIN
+    IF INSERTING THEN
+            INSERT INTO flibrary_audit (rollno, name, dateofissue, nameofbook, status, timestamp, action_type)
+            VALUES (:OLD.rollno, :OLD.name, :OLD.dateofissue, :OLD.nameofbook, :OLD.status, CURRENT_TIMESTAMP, 'INSERT');
+    ELSIF UPDATING THEN
+        INSERT INTO flibrary_audit (rollno, name, dateofissue, nameofbook, status, timestamp, action_type)
+        VALUES (:OLD.rollno, :OLD.name, :OLD.dateofissue, :OLD.nameofbook, :OLD.status, CURRENT_TIMESTAMP, 'UPDATE');
+    ELSIF DELETING THEN
+        INSERT INTO flibrary_audit (rollno, name, dateofissue, nameofbook, status, timestamp, action_type)
+        VALUES (:OLD.rollno, :OLD.name, :OLD.dateofissue, :OLD.nameofbook, :OLD.status, CURRENT_TIMESTAMP, 'DELETE');
+    END IF;
+END;
+/

@@ -1,0 +1,45 @@
+create table marks(roll_no number(20),name varchar(20),total_marks number(20));
+create table resu(roll_no number(20),name varchar(20),class varchar(20));
+
+insert into marks values(1,'A',1350);
+
+
+create or replace procedure proc_grade
+(var_rollno in number,
+p_roll_no out marks.roll_no%type,
+p_name out marks.name%type,
+p_total out marks.total_marks%type)
+  
+AS
+BEGIN
+SELECT roll_no,name,total_marks into p_roll_no,p_name,p_total from marks where roll_no=var_rollno;
+IF p_total<=1500 and p_total>=990 then
+insert into resu values(p_roll_no,p_name,'Distination');
+else if p_total<=989 and p_total>=900 then
+insert into resu values(p_roll_no,p_name,'First Class');
+ 
+else if p_total <=899 and p_total>=825 then
+insert into resu values(p_roll_no,p_name,'HSC');
+else
+insert into resu values(p_roll_no,p_name,'fail');
+End if;
+End if;
+End if;
+ 
+EXCEPTION
+WHEN no_data_found then
+dbms_output.put_line('Roll no' || var_rollno||'not found');
+END;
+/
+
+
+DECLARE
+var_rollno number(20);
+p_roll_no marks.roll_no%type;
+p_name marks.name%type;
+p_total marks.total_marks%type;
+BEGIN
+var_rollno:=&var_rollno;
+proc_grade(var_rollno,p_roll_no,p_name,p_total);
+END;
+/

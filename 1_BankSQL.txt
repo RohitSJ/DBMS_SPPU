@@ -1,0 +1,77 @@
+1.
+1. Find the names of all branches in loan relation.
+select distinct Branch_name from Loan;
+
+2. Find all loan numbers for loans made at „Wadia College‟ Branch with loan amount > 12000.
+select Loan_no from Loan where Branch_name="Wadia collage" and amt>12000;
+
+3. Find all customers who have a loan from bank. Find their names,loan_no and loan amount.
+select cust_name,Loan.loan_no,amt from Borrower,Loan where Loan.loan_no = Borrower.loan_no;
+
+4. List all customers in alphabetical order who have loan from „Wadia College‟ branch.
+select Cust_name from Loan,Borrower where Loan.Loan_no=Borrower.Loan_no and Branch_name = 'Akurdi' order by Cust_name;
+
+5. Display distinct cities of branch.
+select distinct Branch_city from Branch;
+
+
+
+2.
+1. Find all customers who have both account and loan at bank.
+select Borrower.Cust_name from Borrower,Depositor where Borrower.Cust_name = Depositor.Cust_name ;
+
+2. Find all customers who have an account or loan or both at bank.
+select Cust_name from Borrower union select Cust_name from Depositor;
+
+3. Find all customers who have account but no loan at the bank.
+select cust_name from Depositor where cust_name not in(select cust_name from Borrower);
+
+4. Find average account balance at „Wadia College‟ branch.
+select branch_name,avg(balance) from account where branch_name="Wadia collage";
+
+5. Find no. of depositors at each branch
+select branch_name,count(*) from Account group by branch_name;
+
+
+
+3.
+1. Find the branches where average account balance > 15000.
+select branch_name,avg(balance) from Account group by branch_name having avg(balance)> 15000;
+
+2. Find number of tuples in customer relation.
+select count(*) from customer;
+
+3. Calculate total loan amount given by bank.
+select sum(amount) from loan;
+
+4. Delete all loans with loan amount between 1300 and 1500.
+delete from loan1 where amount>=1300 and amount<=1500;
+
+5. Find the average account balance at each branch
+select avg(balance),branch_name from Account group by branch_name;
+
+6. Find name of Customer and city where customer name starts with Letter P. 
+select cust_name,cust_city from Customer where cust_name like 'A%';
+
+
+
+7.
+1. Create a View1 to display List all customers in alphabetical order who have loan from Pune_Station branch.
+create view v1 as select Cust_name from borrower,loan where loan.branch_name='Aundh' order by cust_name;
+
+2. Create View2 on branch table by selecting any two columns and perform insert update delete operations.
+create view v2 as select branch_name,assets from branch;
+insert into v2 values('ABC',999990);
+delete from v2 where Branch_name='ABC';
+
+3. Create View3 on borrower and depositor table by selecting any one column from each table perform insert update delete operations.
+ create view view3 as select Acc_no,Loan_no from Depositor,Borrower where Depositor.Cust_name=Borrower.Cust_name;
+
+4. Create Union of left and right joint for all customers who have an account or loan or both at bank
+select Account.Acc_no,Account.Balance,Account.Branch_name,Loan.Loan_no from Account LEFT JOIN Loan on Account.Branch_name=Loan.Branch_name;
+
+5. Create Simple and Unique index.
+create unique index index1 on Customer(Customer_name);
+
+6. Display index Information.
+show index from customer;

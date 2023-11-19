@@ -1,0 +1,26 @@
+1. Display the total salary of per company
+
+var map=function(){ emit(this.Company,this.Salary)};
+var reduce=function(Company,Salary){ return Array.sum(Salary);};
+db.Empdb.mapReduce(map,reduce,{out :"result1"});
+
+2. Display the total salary of company Name:"TCS"
+
+var map=function(){ emit(this.Company,this.Salary)};
+var reduce=function(Company,Salary){ return Array.sum(Salary);};
+db.Empdb.mapReduce(map,reduce,{query:{Company:"TCS"},out :"result2"});
+
+3. Return the average salary of company whose address is “Pune".
+
+var map=function(){ emit(this.Company,this.Salary)};
+var reduce=function(Company,Salary){ return Array.avg(Salary);};
+db.Empdb.mapReduce(map,reduce,{query:{"Add.Ladd":"Pune"},out :"result3"});
+
+4. Display total count for “City=Pune”
+
+var map = function() {for (var i = 0; i < this.Add.length; i++) {if (this.Add[i].PAdd.City == "Pune") {emit("Pune", 1);break;}}};
+var reduce= function(key, values) {return Array.sum(values);};
+db.Empdb.mapReduce(map,reduce,{ out: "result4"});
+
+5. Return count for city pune and age greater than 40.
+

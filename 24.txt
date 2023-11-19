@@ -1,0 +1,39 @@
+SET SERVEROUTPUT ON;
+SET VERIFY OF;
+
+create table emp24(emp_no NUMBER,
+emp_name varchar(20),
+emp_salary NUMBER);
+
+create table tracking(emp_no NUMBER,
+emp_salary NUMBER);
+
+insert into emp24 values(1,'ritesh',20000);
+insert into emp24 values(2,'suyash',100000);
+
+
+CREATE OR REPLACE TRIGGER emp_sal_trig
+AFTER INSERT OR DELETE OR UPDATE
+ON emp24
+FOR EACH ROW
+
+DECLARE
+    p_salary NUMBER;
+BEGIN
+    IF INSERTING THEN
+        IF :NEW.emp_salary<50000 THEN
+            insert into tracking values(:NEW.emp_no,:NEW.emp_salary);
+        END IF;
+    END IF;
+
+    IF UPDATING THEN 
+        IF :NEW.emp_salary<50000 THEN
+            insert into tracking values(:NEW.emp_no,:NEW.emp_salary);
+        END IF;
+    END IF;
+    IF DELETING THEN 
+        insert into tracking values(:OLD.emp_no,:OLD.emp_salary);
+    END IF;
+END;
+
+insert into emp24 values(101,'onkar',40000);

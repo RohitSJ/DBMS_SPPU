@@ -1,0 +1,32 @@
+CREATE TABLE Stud(roll int primary key,att int,sta varchar(20));
+
+insert into Stud(roll) values (1); 
+insert into Stud(roll) values (2);
+insert into Stud(roll) values (3);
+insert into Stud(roll) values (4);
+
+
+set serveroutput on;
+
+Declare  
+ mroll int;
+ xatt int;
+ xsta varchar(20);
+BEGIN 
+mroll:=&roll;
+xatt:=&att;
+select att into xsta from Stud where roll=mroll;
+if (xatt<75) then 
+dbms_output.put_line(mroll||' Term not granted');
+update Stud set att = xatt,sta = 'Detained' where roll = mroll;
+else
+dbms_output.put_line(mroll||' Term granted');
+update Stud set att = xatt,sta = 'Not Detained' where roll = mroll;
+end if;
+EXCEPTION 
+WHEN NO_DATA_FOUND THEN 
+DBMS_OUTPUT.PUT_LINE('No record found '); 
+WHEN OTHERS THEN 
+DBMS_OUTPUT.PUT_LINE('An error occurred: '|| SQLERRM); 	
+END;
+/

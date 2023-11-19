@@ -1,0 +1,46 @@
+4_Order
+
+create table Cust_Master(
+cust_no varchar(20) primary key,
+cust_name varchar(20),
+cust_addr varchar(20)
+);
+
+create table Orders(
+order_no int primary key,
+cust_no varchar(20) not null,
+order_date DATE,
+qty int,
+foreign key(cust_no) references Cust_Master(cust_no)
+);
+
+CREATE TABLE Product(
+product_no INT PRIMARY KEY,
+product_name VARCHAR(50) NOT NULL,
+order_no INT,
+FOREIGN KEY (order_no) REFERENCES Orders(order_no)
+);
+
+1. List names of customers having 'A' as second letter in their name.
+select cust_name from Cust_Master where cust_name like '_a%';
+
+2. Display order from Customer no C1002,C1005,C1007 and C1008
+select * from Orders where cust_no in ("C1002","C1005","C1007","C1008");
+
+3. List Clients who stay in either 'Banglore or 'Manglore'
+select cust_name from Cust_Master where cust_addr in ("Banglore","Manglore");
+
+4. Display name of customers& the product_name they have purchase
+SELECT Cust_name,Product_name FROM Cust_Master , Orders , Product WHERE Cust_Master.Cust_no = Orders.Cust_no AND Orders.Order_no = Product.Order_no;
+
+5. Create view View1 consisting of Cust_name, Product_name.
+create view view3 as select Cust_Master.cust_name,Product.product_name from Cust_Master,Orders,Product where Cust_Master.cust_no = Orders.cust_no and Orders.order_no = Product.order_no;
+
+6. Disply product_name and quantity purchase by each customer
+select cust_name,product_name,qty from Cust_Master,Orders,Product where Cust_Master.cust_no = Orders.cust_no and Orders.order_no = Product.Order_no;
+
+7. Perform different joint operation.
+select cust_name from Cust_Master left join Orders on Cust_Master.cust_no = Orders.cust_no;
+
+
+

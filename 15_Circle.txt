@@ -1,0 +1,9 @@
+DECLARE
+Area number:=0;
+BEGIN
+for r IN 5 .. 9 LOOP
+Area:=3.14*r*r;
+insert into Areas values(r,Area);
+END LOOP;
+END;
+/

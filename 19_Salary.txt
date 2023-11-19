@@ -1,0 +1,42 @@
+SET SERVEROUTPUT ON;
+SET VERIFY OF;
+
+create table emp(emp_no number, salary INT);
+create table inc_salary(emp_no number,salary INT);
+
+insert into emp values(101,12000);
+insert into emp values(102,10000);
+insert into emp values(103,50000);
+insert into emp values(104,100000);
+insert into emp values(105,110000);
+
+
+DECLARE
+p_avgsalary INT;
+BEGIN
+    select avg(salary)
+    into p_avgsalary
+    from emp;
+
+    FOR emp_rec in(select emp_no, salary from emp where salary<p_avgsalary) LOOP
+
+        DECLARE
+            p_incrementamount INT;
+
+        BEGIN
+            p_incrementamount:=emp_rec.salary*0.10;
+
+            update emp
+            set salary=salary+p_incrementamount
+            where emp_no=emp_rec.emp_no;
+
+            insert into inc_salary values(emp_rec.emp_no,p_incrementamount);
+
+            COMMIT;
+        EXCEPTION
+            WHEN OTHERS THEN
+                dbms_output.put_line('error occured'||SQLERRM);
+        END;
+    END LOOP;
+END;
+/

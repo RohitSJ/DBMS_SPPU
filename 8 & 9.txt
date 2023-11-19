@@ -1,0 +1,56 @@
+8 & 9
+
+create table Companies(comp_id VARCHAR(4) primary key,name varchar(25) NOT NULL,cost INT NOT NULL,year INT NOT NULL);
+
+create table Orders(comp_id varchar(4),domain varchar(25) NOT NULL,quantity INT NOT NULL,
+FOREIGN KEY (comp_id) REFERENCES Companies(comp_id));
+
+insert into Companies(comp_id,name,cost,year) VALUES('C001','ONGC',2000,2010), ('C002','HPCL',2500,2012),('C005','IOCL',1000,2014),('C006','BHEL',3000,2015);
+
+insert into Orders(comp_id,domain,quantity) VALUES ('C001','Oil',109),('C002','Gas',121), ('C005','Telecom',115);
+
+
+
+1. Find names, costs, domains and quantities for companies using inner join.
+select name,cost,domain,quantity from Companies inner join Orders on Orders.comp_id=Companies.comp_id;
+
+2. Find names, costs, domains and quantities for companies using left outer join.
+select name,cost,domain,quantity from Companies left join Orders on Orders.comp_id = Companies.comp_id;
+
+
+3. Find names, costs, domains and quantities for companies using right outer join.
+select name,cost,domain,quantity from companies right join orders on companies.comp_id = orders.comp_id;
+
+
+4. Find names, costs, domains and quantities for companies using Union operator.
+select name,cost from companies join orders on orders.comp_id=companies.comp_id union select domain,quantity from orders join companies on orders.comp_id = companies.comp_id;
+
+5. Create View View1 by selecting both tables to show company name and quantities.
+create view v1 as select name,quantity from companies,orders where orders.comp_id = companies.comp_id;
+
+6. Create View View2 by selecting any two columns and perform insert update delete operations.
+ 
+
+
+
+9]
+1. List all stationary items with price between 400/- to 1000/-
+SELECT *FROM ITEMS WHERE Itype = 'Stationary' AND Iprice BETWEEN 400 AND 1000;
+
+2. Change the mobile number of customer “Gopal”
+update CUSTOMERS set CMobile=9322720904 where Cname="Gopal";
+
+3. Display the item with maximum price
+SELECT * FROM ITEMS WHERE Iprice = (SELECT MAX(Iprice) FROM ITEMS);
+
+4. Display all purchases sorted from the most recent to the oldest
+SELECT * FROM PURCHASE ORDER BY Pdate DESC;
+
+5. Count the number of customers in every city
+select Ccity,count(*) from CUSTOMERS group by Ccity;
+
+6. Display all purchased quantity of Customer Maya
+SELECT P.Pquantity, I.Iname FROM PURCHASE P, ITEMS I, CUSTOMERS C WHERE P.INo = I.INo AND P.Cno = C.CNo AND C.Cname = 'Maya';
+
+7. Create view which shows Iname, Price and Count of all stationary items in descending order of price.
+CREATE VIEW StationaryItemsView AS SELECT Iname, Iprice AS Price, Icount AS Count FROM ITEMS WHERE Itype = 'Stationary' ORDER BY Iprice DESC;
